@@ -4,22 +4,35 @@ import types
 def udir(o):
     """
     Uber dir
-    Returns only visible attributes of object
+    Returns a list of VISIBLE attributes found on the object.
+    Excludes built-in attributes (everything starting with __)
+    Excludes private attributes (everything starting with _)
     """
-    prop = dir(o)
-    prop = [i for i in prop if not i.startswith('_')]
+    attributes = dir(o)
     
-    return prop
+    attributes = [i for i in attributes if not i.startswith('_')]
+    
+    return attributes
 
-def var_info(obj, max_len=200):
-    """Returns type-info about the attributes of an object"""
+def varinfo(o, max_str_len=200):
+    """
+    Variable info
+    Returns a human-readable list of properties of the object
+    Will return the actual value of the following types:
+    *str (capped at 200 per default)
+    *int
+    *bool
+    Other datatypes are displayed as the name of their Class
+    Functions are simply displayed as ()
+    """
     ret = [] 
     
-    attributes = udir(obj)
+    attributes = udir(o)
+
     for name in attributes:
-        val = getattr(obj,name)
+        val = getattr(o,name)
         if isinstance(val,str):
-            str_val = val[:max_len].replace(r'\n',r'\n')
+            str_val = val[:max_str_len].replace(r'\n',r'\n')
             ret.append(
                 f'{name}: str -> {str_val}')
             continue
@@ -61,7 +74,6 @@ def _find_type_match(obj):
             ret.append(type_obj)
     return ret
         
-
 
         
 
