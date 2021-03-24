@@ -1,8 +1,8 @@
-# var_info
-**var_info** is a set of helper functions for displaying human friendly information about an object's visible attributes.
+# varinfo
+**varinfo** is a set of helper functions for displaying human friendly information about an object's attributes.
 
 ```python
->>> from var_info import varinfo
+>>> from varinfo import varinfo
 >>> file = open('example.txt')
 >>> varinfo(file)
 ["buffer -> <class '_io.BufferedReader'>",
