@@ -1,7 +1,7 @@
 import types
 
 
-def udir(o):
+def udir(o, search = ''):
     """
     Uber dir
     Returns a list of VISIBLE attributes found on the object.
@@ -9,12 +9,19 @@ def udir(o):
     Excludes private attributes (everything starting with _)
     """
     attributes = dir(o)
+
+    if search:
+        attributes = grep(attributes,search)
     
     attributes = [i for i in attributes if not i.startswith('_')]
     
     return attributes
 
-def varinfo(o, max_str_len=200):
+def varinfo(o, 
+    search = '',
+    max_str_len=200,
+    
+    ):
     """
     Variable info
     Returns a human-readable list of properties of the object
@@ -27,7 +34,9 @@ def varinfo(o, max_str_len=200):
     """
     ret = [] 
     
-    attributes = udir(o)
+    attributes = udir(o, search=search)
+
+    print(f'varinfo max_str: {max_str_len} search: {search}')
 
     for name in attributes:
         val = getattr(o,name)
@@ -45,6 +54,9 @@ def varinfo(o, max_str_len=200):
         if isinstance(val, types.BuiltinFunctionType):
             ret.append(f'{name}()')
             continue
+        if isinstance(val, types.FunctionType):
+            ret.append(f'{name}()')
+            continue
         """
         Todo: figure out these
         types.BuiltinMethodType
@@ -53,6 +65,14 @@ def varinfo(o, max_str_len=200):
         """
         ret.append(f'{name} -> {type(val)}')
     
+    return ret
+
+def grep(lst,search_str):
+    """Return only the entries of a list
+    that contain the search string.
+    Similar to unix grep
+    """
+    ret = [entry for entry in lst if search_str in entry]
     return ret
 
 def _exclude_non_capitalized(lst):
